@@ -79,6 +79,7 @@ function SignUpSignIn() {
         email: auth.currentUser.email,
         name: auth.currentUser.displayName || "",
         createdAt: new Date().toISOString(),
+        photoURL: auth.currentUser.photoURL || "",
         // Add default user settings/preferences
         preferences: {
           currency: "USD",
