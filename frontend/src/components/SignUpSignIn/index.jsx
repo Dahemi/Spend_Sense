@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { auth, provider } from "../../firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { db, auth, provider, doc, setDoc } from "../../firebase";
 import Input from "../Input";
 import "./styles.css";
 
@@ -19,26 +25,75 @@ function SignUpSignIn() {
     try {
       if (isSignUp) {
         await createUserWithEmailAndPassword(auth, email, password);
+        toast.success("Account created successfully!");
+
+        // Create the user document with their UID
+        await createDoc(auth.currentUser.uid);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        toast.success("Signed in successfully!");
       }
       navigate("/dashboard");
     } catch (error) {
       console.error("Error:", error);
+      const errorMessage =
+        error.code === "auth/invalid-credentials"
+          ? "Invalid email or password"
+          : error.message;
+      toast.error(errorMessage || "Authentication failed");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   // Function to sign in with Google
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
+      // Force Google to show account chooser every time
+      provider.setCustomParameters({
+        prompt: "select_account",
+      });
+
       const result = await signInWithPopup(auth, provider);
       if (result.user) {
+        toast.success("Successfully signed in with Google!");
         navigate("/dashboard");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error(error.message || "Failed to sign in with Google");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  //Function to create a new doc in Firestore for each new user.
+  const createDoc = async (uid) => {
+    try {
+      // Create a reference to the user document using their UID
+      const userDocRef = doc(db, "users", uid);
+
+      // Set the initial data for the user
+      await setDoc(userDocRef, {
+        email: auth.currentUser.email,
+        name: auth.currentUser.displayName || "",
+        createdAt: new Date().toISOString(),
+        // Add default user settings/preferences
+        preferences: {
+          currency: "USD",
+          theme: "light",
+        },
+        // Initialize empty arrays/objects for user data
+        transactions: [],
+        categories: [],
+      });
+
+      toast.success("User profile created successfully!");
+    } catch (error) {
+      console.error("Error creating user document:", error);
+      toast.error("Failed to create user profile");
+    }
   };
 
   return (
@@ -67,7 +122,7 @@ function SignUpSignIn() {
             required
           />
 
-          {/*   */}
+          {/* */}
           <button type="submit" className="submit-btn" disabled={loading}>
             {loading ? "Processing..." : isSignUp ? "Sign Up" : "Sign In"}
           </button>
