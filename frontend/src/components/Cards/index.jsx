@@ -1,13 +1,19 @@
 import React from "react";
 import "./styles.css";
 import { Button, Card, Statistic } from "antd";
-function Cards({ showExpenseModal, showIncomeModal }) {
+function Cards({
+  balance,
+  income,
+  expense,
+  showExpenseModal,
+  showIncomeModal,
+}) {
   return (
     <div className="cards-container">
       <Card className="minimal-card">
         <Statistic
           title="Current Balance"
-          value={0}
+          value={balance}
           precision={2}
           prefix="$"
           valueStyle={{ fontSize: "1.5rem", fontWeight: "bold" }}
@@ -20,7 +26,7 @@ function Cards({ showExpenseModal, showIncomeModal }) {
       <Card className="minimal-card">
         <Statistic
           title="Total Income"
-          value={0}
+          value={income}
           precision={2}
           prefix="$"
           valueStyle={{ fontSize: "1.5rem", fontWeight: "bold" }}
@@ -37,7 +43,7 @@ function Cards({ showExpenseModal, showIncomeModal }) {
       <Card className="minimal-card">
         <Statistic
           title="Total Expense"
-          value={0}
+          value={expense}
           precision={2}
           prefix="$"
           valueStyle={{ fontSize: "1.5rem", fontWeight: "bold" }}
