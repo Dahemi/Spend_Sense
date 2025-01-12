@@ -1,0 +1,75 @@
+.cards-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 40px auto;
+  max-width: 900px; /* Restrict overall width */
+  padding: 0 16px;
+}
+
+.minimal-card {
+  flex: 1;
+  max-width: 300px; /* Ensure all cards have the same width */
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  text-align: center;
+  background-color: #ffffff;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.minimal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.minimal-card .ant-statistic-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.minimal-card .ant-statistic-content {
+  color: #333;
+}
+
+.minimal-card .ant-statistic-content-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.reset-button {
+  margin-top: 16px;
+  color: #1890ff;
+  border: 1px solid #1890ff;
+  border-radius: 4px;
+  background-color: #fff;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.reset-button:hover {
+  background-color: #e6f7ff;
+  border-color: #40a9ff;
+  color: #0050b3;
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+  .cards-container {
+    flex-direction: column; /* Stack cards vertically */
+    align-items: center; /* Center them horizontally */
+  }
+
+  .minimal-card {
+    max-width: 100%; /* Expand to fit the container */
+  }
+}
+
+/****/
+.dashboard-container {
+  @apply pt-16;
+}
